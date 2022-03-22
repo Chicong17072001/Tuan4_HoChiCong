@@ -9,7 +9,7 @@ namespace Tuan4_HoChiCong.Controllers
 {
     public class HomeController : Controller
     {
-        MyDataDataContext data = new MyDataDataContext();
+        MydataDataContext data = new MydataDataContext();
         public ActionResult Index(int ? page)
         {
             if (page == null) page = 1;

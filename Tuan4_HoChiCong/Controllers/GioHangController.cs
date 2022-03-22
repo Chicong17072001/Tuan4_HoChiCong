@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Windows.Forms;
 using Tuan4_HoChiCong.Models;
 namespace Tuan4_HoChiCong.Controllers
 {
     public class GioHangController : Controller
     {
         // GET: GioHang
-        MyDataDataContext data = new MyDataDataContext();
+        MydataDataContext data = new MydataDataContext();
         public List<GioHang> Laygiohang()
         {
             List<GioHang> lstGiohang = Session["GioHang"] as List<GioHang>;
@@ -93,7 +94,7 @@ namespace Tuan4_HoChiCong.Controllers
             }
             return RedirectToAction("GioHang");
         }
-        public ActionResult CapNhatGiohang(int id,FormCollection collection)
+        public ActionResult CapNhatGiohang(int id, System.Web.Mvc.FormCollection collection)
         {
             List<GioHang> lstGiohang = Laygiohang();
             GioHang sanpham = lstGiohang.SingleOrDefault(n => n.masach == id);
@@ -108,6 +109,54 @@ namespace Tuan4_HoChiCong.Controllers
             List<GioHang> lstGiohang = Laygiohang();
             lstGiohang.Clear();
             return RedirectToAction("GioHang");
+        }
+        public ActionResult Dathang()
+        {
+            List<GioHang> lstGioHang = Laygiohang();
+            if (lstGioHang.Count() != 0)
+            {
+                DialogResult result = MessageBox.Show("bạn muốn đặt hàng", "Hỏi", MessageBoxButtons.OKCancel);
+                if (result == DialogResult.OK)
+                {
+                    //create invoice
+                    Invoice invoice = new Invoice();
+                    invoice.Invoice_DateCreate = DateTime.Now;
+                    data.Invoices.InsertOnSubmit(invoice);
+                    data.SubmitChanges();
+                    int invoide_id = data.Invoices.OrderByDescending(p => p.Invoice_ID).Select(p => p.Invoice_ID).FirstOrDefault();
+                    //add invoice's detail
+                    Invoice_Detail idetail;
+                    foreach (var ele in lstGioHang)
+                    {
+                        idetail = new Invoice_Detail();
+                        idetail.masach = ele.masach;
+                        idetail.Invoice_ID = invoide_id;
+                        idetail.giamua = ele.giaban;
+                        idetail.soluong = ele.iSoluong;
+                        data.Invoice_Details.InsertOnSubmit(idetail);
+                        var book = data.Saches.FirstOrDefault(p => p.masach == ele.masach);
+                        book.soluongton -= idetail.soluong;
+                        UpdateModel(book);
+                    }
+                    data.SubmitChanges();
+                    string str = "";
+                    int i = 1;
+                    foreach (var ele in lstGioHang)
+                    {
+                        str += i + " - " + ele.tensach + "\n";
+                        i++;
+                    }
+                    MessageBox.Show("Đặt hàng thành công!\n" + "---------------\n" + "Danh sách đặt hàng\n" + str);
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Giỏ hàng trống");
+            }
+            
+            return RedirectToAction("Index", "Home");
+
         }
     }
 }

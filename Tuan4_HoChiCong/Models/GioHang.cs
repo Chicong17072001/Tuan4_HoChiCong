@@ -8,7 +8,8 @@ namespace Tuan4_HoChiCong.Models
 {
     public class GioHang
     {
-        MyDataDataContext data = new MyDataDataContext();
+        MydataDataContext data = new MydataDataContext();
+
         public int masach { get; set; }
         [Display(Name = "Tên Sách")]
         public string tensach { get; set; }

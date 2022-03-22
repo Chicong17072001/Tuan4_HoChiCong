@@ -23,13 +23,19 @@ namespace Tuan4_HoChiCong.Models
 	
 	
 	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="NhaSach")]
-	public partial class MyDataDataContext : System.Data.Linq.DataContext
+	public partial class MydataDataContext : System.Data.Linq.DataContext
 	{
 		
 		private static System.Data.Linq.Mapping.MappingSource mappingSource = new AttributeMappingSource();
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
+    partial void InsertInvoice(Invoice instance);
+    partial void UpdateInvoice(Invoice instance);
+    partial void DeleteInvoice(Invoice instance);
+    partial void InsertInvoice_Detail(Invoice_Detail instance);
+    partial void UpdateInvoice_Detail(Invoice_Detail instance);
+    partial void DeleteInvoice_Detail(Invoice_Detail instance);
     partial void InsertSach(Sach instance);
     partial void UpdateSach(Sach instance);
     partial void DeleteSach(Sach instance);
@@ -38,34 +44,50 @@ namespace Tuan4_HoChiCong.Models
     partial void DeleteTheLoai(TheLoai instance);
     #endregion
 		
-		public MyDataDataContext() : 
+		public MydataDataContext() : 
 				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["NhaSachConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public MyDataDataContext(string connection) : 
+		public MydataDataContext(string connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public MyDataDataContext(System.Data.IDbConnection connection) : 
+		public MydataDataContext(System.Data.IDbConnection connection) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public MyDataDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public MydataDataContext(string connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
 		}
 		
-		public MyDataDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
+		public MydataDataContext(System.Data.IDbConnection connection, System.Data.Linq.Mapping.MappingSource mappingSource) : 
 				base(connection, mappingSource)
 		{
 			OnCreated();
+		}
+		
+		public System.Data.Linq.Table<Invoice> Invoices
+		{
+			get
+			{
+				return this.GetTable<Invoice>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Invoice_Detail> Invoice_Details
+		{
+			get
+			{
+				return this.GetTable<Invoice_Detail>();
+			}
 		}
 		
 		public System.Data.Linq.Table<Sach> Saches
@@ -81,6 +103,336 @@ namespace Tuan4_HoChiCong.Models
 			get
 			{
 				return this.GetTable<TheLoai>();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Invoice")]
+	public partial class Invoice : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Invoice_ID;
+		
+		private System.Nullable<System.DateTime> _Invoice_DateCreate;
+		
+		private EntitySet<Invoice_Detail> _Invoice_Details;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnInvoice_IDChanging(int value);
+    partial void OnInvoice_IDChanged();
+    partial void OnInvoice_DateCreateChanging(System.Nullable<System.DateTime> value);
+    partial void OnInvoice_DateCreateChanged();
+    #endregion
+		
+		public Invoice()
+		{
+			this._Invoice_Details = new EntitySet<Invoice_Detail>(new Action<Invoice_Detail>(this.attach_Invoice_Details), new Action<Invoice_Detail>(this.detach_Invoice_Details));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Invoice_ID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Invoice_ID
+		{
+			get
+			{
+				return this._Invoice_ID;
+			}
+			set
+			{
+				if ((this._Invoice_ID != value))
+				{
+					this.OnInvoice_IDChanging(value);
+					this.SendPropertyChanging();
+					this._Invoice_ID = value;
+					this.SendPropertyChanged("Invoice_ID");
+					this.OnInvoice_IDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Invoice_DateCreate", DbType="Date")]
+		public System.Nullable<System.DateTime> Invoice_DateCreate
+		{
+			get
+			{
+				return this._Invoice_DateCreate;
+			}
+			set
+			{
+				if ((this._Invoice_DateCreate != value))
+				{
+					this.OnInvoice_DateCreateChanging(value);
+					this.SendPropertyChanging();
+					this._Invoice_DateCreate = value;
+					this.SendPropertyChanged("Invoice_DateCreate");
+					this.OnInvoice_DateCreateChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Invoice_Invoice_Detail", Storage="_Invoice_Details", ThisKey="Invoice_ID", OtherKey="Invoice_ID")]
+		public EntitySet<Invoice_Detail> Invoice_Details
+		{
+			get
+			{
+				return this._Invoice_Details;
+			}
+			set
+			{
+				this._Invoice_Details.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Invoice_Details(Invoice_Detail entity)
+		{
+			this.SendPropertyChanging();
+			entity.Invoice = this;
+		}
+		
+		private void detach_Invoice_Details(Invoice_Detail entity)
+		{
+			this.SendPropertyChanging();
+			entity.Invoice = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Invoice_Detail")]
+	public partial class Invoice_Detail : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Invoice_ID;
+		
+		private int _masach;
+		
+		private System.Nullable<int> _soluong;
+		
+		private System.Nullable<double> _giamua;
+		
+		private EntityRef<Invoice> _Invoice;
+		
+		private EntityRef<Sach> _Sach;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnInvoice_IDChanging(int value);
+    partial void OnInvoice_IDChanged();
+    partial void OnmasachChanging(int value);
+    partial void OnmasachChanged();
+    partial void OnsoluongChanging(System.Nullable<int> value);
+    partial void OnsoluongChanged();
+    partial void OngiamuaChanging(System.Nullable<double> value);
+    partial void OngiamuaChanged();
+    #endregion
+		
+		public Invoice_Detail()
+		{
+			this._Invoice = default(EntityRef<Invoice>);
+			this._Sach = default(EntityRef<Sach>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Invoice_ID", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int Invoice_ID
+		{
+			get
+			{
+				return this._Invoice_ID;
+			}
+			set
+			{
+				if ((this._Invoice_ID != value))
+				{
+					if (this._Invoice.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnInvoice_IDChanging(value);
+					this.SendPropertyChanging();
+					this._Invoice_ID = value;
+					this.SendPropertyChanged("Invoice_ID");
+					this.OnInvoice_IDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_masach", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int masach
+		{
+			get
+			{
+				return this._masach;
+			}
+			set
+			{
+				if ((this._masach != value))
+				{
+					if (this._Sach.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnmasachChanging(value);
+					this.SendPropertyChanging();
+					this._masach = value;
+					this.SendPropertyChanged("masach");
+					this.OnmasachChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_soluong", DbType="Int")]
+		public System.Nullable<int> soluong
+		{
+			get
+			{
+				return this._soluong;
+			}
+			set
+			{
+				if ((this._soluong != value))
+				{
+					this.OnsoluongChanging(value);
+					this.SendPropertyChanging();
+					this._soluong = value;
+					this.SendPropertyChanged("soluong");
+					this.OnsoluongChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_giamua", DbType="Float")]
+		public System.Nullable<double> giamua
+		{
+			get
+			{
+				return this._giamua;
+			}
+			set
+			{
+				if ((this._giamua != value))
+				{
+					this.OngiamuaChanging(value);
+					this.SendPropertyChanging();
+					this._giamua = value;
+					this.SendPropertyChanged("giamua");
+					this.OngiamuaChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Invoice_Invoice_Detail", Storage="_Invoice", ThisKey="Invoice_ID", OtherKey="Invoice_ID", IsForeignKey=true)]
+		public Invoice Invoice
+		{
+			get
+			{
+				return this._Invoice.Entity;
+			}
+			set
+			{
+				Invoice previousValue = this._Invoice.Entity;
+				if (((previousValue != value) 
+							|| (this._Invoice.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Invoice.Entity = null;
+						previousValue.Invoice_Details.Remove(this);
+					}
+					this._Invoice.Entity = value;
+					if ((value != null))
+					{
+						value.Invoice_Details.Add(this);
+						this._Invoice_ID = value.Invoice_ID;
+					}
+					else
+					{
+						this._Invoice_ID = default(int);
+					}
+					this.SendPropertyChanged("Invoice");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Sach_Invoice_Detail", Storage="_Sach", ThisKey="masach", OtherKey="masach", IsForeignKey=true)]
+		public Sach Sach
+		{
+			get
+			{
+				return this._Sach.Entity;
+			}
+			set
+			{
+				Sach previousValue = this._Sach.Entity;
+				if (((previousValue != value) 
+							|| (this._Sach.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Sach.Entity = null;
+						previousValue.Invoice_Details.Remove(this);
+					}
+					this._Sach.Entity = value;
+					if ((value != null))
+					{
+						value.Invoice_Details.Add(this);
+						this._masach = value.masach;
+					}
+					else
+					{
+						this._masach = default(int);
+					}
+					this.SendPropertyChanged("Sach");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
@@ -104,6 +456,8 @@ namespace Tuan4_HoChiCong.Models
 		private System.Nullable<System.DateTime> _ngaycapnhat;
 		
 		private System.Nullable<int> _soluongton;
+		
+		private EntitySet<Invoice_Detail> _Invoice_Details;
 		
 		private EntityRef<TheLoai> _TheLoai;
 		
@@ -129,6 +483,7 @@ namespace Tuan4_HoChiCong.Models
 		
 		public Sach()
 		{
+			this._Invoice_Details = new EntitySet<Invoice_Detail>(new Action<Invoice_Detail>(this.attach_Invoice_Details), new Action<Invoice_Detail>(this.detach_Invoice_Details));
 			this._TheLoai = default(EntityRef<TheLoai>);
 			OnCreated();
 		}
@@ -277,6 +632,19 @@ namespace Tuan4_HoChiCong.Models
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Sach_Invoice_Detail", Storage="_Invoice_Details", ThisKey="masach", OtherKey="masach")]
+		public EntitySet<Invoice_Detail> Invoice_Details
+		{
+			get
+			{
+				return this._Invoice_Details;
+			}
+			set
+			{
+				this._Invoice_Details.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TheLoai_Sach", Storage="_TheLoai", ThisKey="maloai", OtherKey="maloai", IsForeignKey=true)]
 		public TheLoai TheLoai
 		{
@@ -329,6 +697,18 @@ namespace Tuan4_HoChiCong.Models
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_Invoice_Details(Invoice_Detail entity)
+		{
+			this.SendPropertyChanging();
+			entity.Sach = this;
+		}
+		
+		private void detach_Invoice_Details(Invoice_Detail entity)
+		{
+			this.SendPropertyChanging();
+			entity.Sach = null;
 		}
 	}
 	

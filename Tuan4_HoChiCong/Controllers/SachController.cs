@@ -9,7 +9,7 @@ namespace Tuan4_HoChiCong.Controllers
     public class SachController : Controller
     {
         // GET: Sach
-        MyDataDataContext data = new MyDataDataContext();
+        MydataDataContext data = new MydataDataContext();
         public ActionResult ListSach()
         {
             //MyDataDataContext data = new MyDataDataContext();
