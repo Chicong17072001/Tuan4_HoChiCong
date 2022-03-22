@@ -9,6 +9,7 @@ namespace Tuan4_HoChiCong.Controllers
 {
     public class GioHangController : Controller
     {
+        //commit lan 2
         // GET: GioHang
         MydataDataContext data = new MydataDataContext();
         public List<GioHang> Laygiohang()
